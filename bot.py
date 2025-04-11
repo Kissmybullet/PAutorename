@@ -10,12 +10,24 @@ import pyrogram.utils
 import pyromod
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import os
+from flask import Flask, jsonify
 import time
 
 pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
 
+# Create Flask app
+flask_app = Flask(__name__)
+
+@flask_app.route('/uptime', methods=['GET'])
+def uptime():
+    return jsonify({"status": "ok"}), 200
+
+def run_flask():
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("FLASK_PORT", 5000)))
+
+
 # Setting SUPPORT_CHAT directly here
-SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1001953724858"))
+SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002461902196"))
 
 PORT = Config.PORT
 
