@@ -104,7 +104,15 @@ async def add_metadata(input_path, output_path, user_id):
     """Add metadata to media file using ffmpeg"""
     ffmpeg = shutil.which('ffmpeg')
     if not ffmpeg:
-        raise RuntimeError("FFmpeg not found in PATH")
+        logger.warning("FFmpeg not found in PATH, skipping metadata addition")
+        # Just copy the file instead of adding metadata
+        try:
+            shutil.copy2(input_path, output_path)
+            return
+        except Exception as e:
+            logger.error(f"Error copying file: {e}")
+            # If copying fails, we'll just use the original file
+            raise RuntimeError(f"Failed to process file: {e}")
     
     metadata = {
         'title': await codeflixbots.get_title(user_id),
@@ -139,7 +147,7 @@ async def add_metadata(input_path, output_path, user_id):
     
     if process.returncode != 0:
         raise RuntimeError(f"FFmpeg error: {stderr.decode()}")
-
+        
 @Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
 async def auto_rename_files(client, message):
     """Main handler for auto-renaming files"""
