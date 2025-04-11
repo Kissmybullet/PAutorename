@@ -6,6 +6,9 @@ RUN apt update && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Explicitly set PATH to ensure FFmpeg is accessible
+ENV PATH="/usr/bin:$PATH"
+
 # Set working directory
 WORKDIR /app
 
@@ -15,7 +18,7 @@ COPY . /app
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Optionally verify FFmpeg installation
+# Verify FFmpeg installation (optional, for debugging purposes)
 RUN ffmpeg -version
 
 # Start the bot
