@@ -178,6 +178,11 @@ async def auto_rename_files(client, message):
             return
     renaming_operations[file_id] = datetime.now()
 
+    # Initialize paths to None for proper cleanup handling
+    download_path = None
+    metadata_path = None
+    thumb_path = None
+
     try:
         # Extract metadata from filename
         season, episode = extract_season_episode(file_name)
@@ -231,15 +236,16 @@ async def auto_rename_files(client, message):
         await msg.edit("**Preparing upload...**")
         caption = await codeflixbots.get_caption(message.chat.id) or f"**{new_filename}**"
         thumb = await codeflixbots.get_thumbnail(message.chat.id)
-        thumb_path = None
 
-        # Handle thumbnail
+        # Handle thumbnail - initialize thumb_path explicitly
         if thumb:
             thumb_path = await client.download_media(thumb)
         elif media_type == "video" and message.video.thumbs:
             thumb_path = await client.download_media(message.video.thumbs[0].file_id)
         
-        thumb_path = await process_thumbnail(thumb_path)
+        # Only process if thumb_path was set
+        if thumb_path:
+            thumb_path = await process_thumbnail(thumb_path)
 
         # Upload file
         await msg.edit("**Uploading...**")
@@ -247,10 +253,13 @@ async def auto_rename_files(client, message):
             upload_params = {
                 'chat_id': message.chat.id,
                 'caption': caption,
-                'thumb': thumb_path,
                 'progress': progress_for_pyrogram,
                 'progress_args': ("Uploading...", msg, time.time())
             }
+            
+            # Only add thumb to parameters if it exists
+            if thumb_path:
+                upload_params['thumb'] = thumb_path
 
             if media_type == "document":
                 await client.send_document(document=file_path, **upload_params)
@@ -268,6 +277,6 @@ async def auto_rename_files(client, message):
         logger.error(f"Processing error: {e}")
         await message.reply_text(f"Error: {str(e)}")
     finally:
-        # Clean up files
+        # Clean up files - safe to pass None values
         await cleanup_files(download_path, metadata_path, thumb_path)
         renaming_operations.pop(file_id, None)
