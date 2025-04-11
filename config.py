@@ -5,21 +5,21 @@ id_pattern = re.compile(r'^.\d+$')
 
 class Config(object):
     # pyro client config
-    API_ID    = os.environ.get("API_ID", "")
-    API_HASH  = os.environ.get("API_HASH", "")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "736532225-w") 
+    API_ID    = os.environ.get("API_ID", "20420188")
+    API_HASH  = os.environ.get("API_HASH", "ac372bd945f5773afe0b714c6429039b")
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7871777689:AAFuVTnjxiVa6OqR1BwCevMf-NIuJcJFXu8") 
 
     # database config
-    DB_NAME = os.environ.get("DB_NAME","Yato")     
-    DB_URL  = os.environ.get("DB_URL","mongodb")
+    DB_NAME = os.environ.get("DB_NAME","dante")     
+    DB_URL  = os.environ.get("DB_URL","mongodb+srv://nitus1673:itachi@cluster0.b9uq1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     PORT = os.environ.get("PORT", "8080")
  
     # other configs
     BOT_UPTIME  = time.time()
-    START_PIC   = os.environ.get("START_PIC", "https://graph.org/file/29a3acbbab9de5f45a5fe.jpg")
+    START_PIC   = os.environ.get("START_PIC", "https://i.ibb.co/kgSv5sKP/3c10c3a8fc8d.jpg")
     ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6497757690').split()]
     FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', 'codeflix_bots').split(',')
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1001868871195"))
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002546420091"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1001868871195"))
     
     # wes response configuration     
