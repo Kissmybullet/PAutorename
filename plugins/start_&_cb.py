@@ -6,7 +6,7 @@ from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, 
 from helper.database import codeflixbots
 from config import *
 from config import Config
-from config import LOG_CHANNEL
+from config import Txt
 
 # Start Command Handler
 @Client.on_message(filters.private & filters.command("start"))
@@ -93,7 +93,7 @@ async def cb_handler(client, query: CallbackQuery):
 
     elif data == "help":
         await query.message.edit_text(
-            text=Txt.HELP_TXT.format(client.mention),
+            text=Txt.HELP_TXT,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ ғᴏʀᴍᴀᴛ •", callback_data='file_names')],
@@ -104,8 +104,8 @@ async def cb_handler(client, query: CallbackQuery):
         )
 
     elif data == "meta":
-        await query.message.edit_text(  # Change edit_caption to edit_text
-            text=Txt.SEND_METADATA,  # Changed from caption to text
+        await query.message.edit_text(
+            text=Txt.SEND_METADATA,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ᴄʟᴏsᴇ", callback_data="close"), InlineKeyboardButton("ʙᴀᴄᴋ •", callback_data="help")]
             ])
@@ -214,7 +214,7 @@ async def premium(bot, message):
     await yt.delete()
     await message.delete()
 
-# Bought Command Handler
+# Bought Command Handler - FIXED HERE
 @Client.on_message(filters.command("bought") & filters.private)
 async def bought(client, message):
     msg = await message.reply('Wait im checking...')
@@ -223,8 +223,9 @@ async def bought(client, message):
     if not replied:
         await msg.edit("<b>Please reply with the screenshot of your payment for the premium purchase to proceed.\n\nFor example, first upload your screenshot, then reply to it using the '/bought' command</b>")
     elif replied.photo:
+        # Fix: Use Config.LOG_CHANNEL instead of LOG_CHANNEL
         await client.send_photo(
-            chat_id=LOG_CHANNEL,
+            chat_id=Config.LOG_CHANNEL,
             photo=replied.photo.file_id,
             caption=f'<b>User - {message.from_user.mention}\nUser id - <code>{message.from_user.id}</code>\nUsername - <code>{message.from_user.username}</code>\nName - <code>{message.from_user.first_name}</code></b>',
             reply_markup=InlineKeyboardMarkup([
@@ -241,7 +242,7 @@ async def help_command(client, message):
 
     # Send the help message with inline buttons
     await message.reply_text(
-        text=Txt.HELP_TXT.format(mention=mention),
+        text=Txt.HELP_TXT,
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup([
             [InlineKeyboardButton("• ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ ғᴏʀᴍᴀᴛ •", callback_data='file_names')],
