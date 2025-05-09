@@ -6,6 +6,7 @@ from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, 
 from helper.database import codeflixbots
 from config import *
 from config import Config
+from config import LOG_CHANNEL
 
 # Start Command Handler
 @Client.on_message(filters.private & filters.command("start"))
