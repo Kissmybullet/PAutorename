@@ -97,6 +97,7 @@ async def cb_handler(client, query: CallbackQuery):
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ᴀᴜᴛᴏ ʀᴇɴᴀᴍᴇ ғᴏʀᴍᴀᴛ •", callback_data='file_names')],
+                [InlineKeyboardButton("• sᴇǫᴜᴇɴᴄᴇ ғɪʟᴇs •", callback_data='sequence_help')],
                 [InlineKeyboardButton('• ᴛʜᴜᴍʙɴᴀɪʟ', callback_data='thumbnail'), InlineKeyboardButton('ᴄᴀᴘᴛɪᴏɴ •', callback_data='caption')],
                 [InlineKeyboardButton('• ᴍᴇᴛᴀᴅᴀᴛᴀ', callback_data='meta'), InlineKeyboardButton('ᴅᴏɴᴀᴛᴇ •', callback_data='donate')],
                 [InlineKeyboardButton('• ʜᴏᴍᴇ', callback_data='home')]
@@ -130,6 +131,13 @@ async def cb_handler(client, query: CallbackQuery):
     elif data == "thumbnail":
         await query.message.edit_caption(
             caption=Txt.THUMBNAIL_TXT,
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("• ᴄʟᴏsᴇ", callback_data="close"), InlineKeyboardButton("ʙᴀᴄᴋ •", callback_data="help")]
+            ])
+        )
+    elif data == "sequence_help":
+        await query.message.edit_caption(
+            caption=Txt.SEQUENCE_TXT,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ᴄʟᴏsᴇ", callback_data="close"), InlineKeyboardButton("ʙᴀᴄᴋ •", callback_data="help")]
             ])
