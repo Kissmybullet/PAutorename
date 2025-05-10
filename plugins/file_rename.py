@@ -15,6 +15,7 @@ from plugins.antinsfw import check_anti_nsfw
 from helper.utils import progress_for_pyrogram, humanbytes, convert
 from helper.database import codeflixbots
 from config import Config
+from pymongo import MongoClient
 
 # Configure logging
 logging.basicConfig(
@@ -25,6 +26,11 @@ logger = logging.getLogger(__name__)
 
 # Global dictionary to track ongoing operations
 renaming_operations = {}
+
+# Database connection for checking sequence mode
+db_client = MongoClient(Config.DB_URL)
+db = db_client[Config.DB_NAME]
+sequence_collection = db["active_sequences"]
 
 # Enhanced regex patterns for season and episode extraction
 SEASON_EPISODE_PATTERNS = [
@@ -52,6 +58,10 @@ QUALITY_PATTERNS = [
     (re.compile(r'\b(4kX264|4kx265)\b', re.IGNORECASE), lambda m: m.group(1)),
     (re.compile(r'\[(\d{3,4}[pi])\]', re.IGNORECASE), lambda m: m.group(1))  # [1080p]
 ]
+
+def is_in_sequence_mode(user_id):
+    """Check if user is in sequence mode"""
+    return sequence_collection.find_one({"user_id": user_id}) is not None
 
 def extract_season_episode(filename):
     """Extract season and episode numbers from filename"""
@@ -148,31 +158,17 @@ async def add_metadata(input_path, output_path, user_id):
     if process.returncode != 0:
         raise RuntimeError(f"FFmpeg error: {stderr.decode()}")
         
-@Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
+# Use a higher group number to ensure it only runs if the sequence handler doesn't handle the message
+@Client.on_message(filters.private & (filters.document | filters.video | filters.audio), group=1)
 async def auto_rename_files(client, message):
     """Main handler for auto-renaming files"""
-    # Check if message has been handled by sequence plugin
-    if hasattr(message, "_sequence_handled") and message._sequence_handled:
-        logger.info("Message already handled by sequence plugin, skipping rename")
+    user_id = message.from_user.id
+    
+    # Skip if user is in sequence mode
+    if is_in_sequence_mode(user_id):
+        logger.info(f"User {user_id} is in sequence mode, skipping rename")
         return
     
-    # Check if user is in sequence mode (database check for safety)
-    try:
-        # Import here to avoid circular imports
-        from pymongo import MongoClient
-        db_client = MongoClient(Config.DB_URL)
-        db = db_client[Config.DB_NAME]
-        sequence_data = db["sequence_data"].find_one(
-            {"user_id": message.from_user.id, "active": True}
-        )
-        if sequence_data:
-            logger.info("User is in sequence mode (DB), skipping rename")
-            return
-    except Exception as e:
-        logger.error(f"DB check error: {e}")
-        # Continue with rename process if DB check fails
-    
-    user_id = message.from_user.id
     format_template = await codeflixbots.get_format_template(user_id)
     
     if not format_template:
