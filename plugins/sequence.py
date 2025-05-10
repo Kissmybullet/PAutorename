@@ -37,7 +37,7 @@ def is_in_sequence_mode(user_id):
     """Check if user is in sequence mode"""
     return sequence_collection.find_one({"user_id": user_id}) is not None
 
-@Client.on_message(filters.command("startsequence"))
+@Client.on_message(filters.private & filters.command("startsequence"))
 async def start_sequence(client, message):
     user_id = message.from_user.id
     
@@ -55,7 +55,7 @@ async def start_sequence(client, message):
     
     await message.reply_text("✅ Sequence mode started! Send your files now.")
 
-@Client.on_message(filters.command("endsequence"))
+@Client.on_message(filters.private & filters.command("endsequence"))
 async def end_sequence(client, message):
     user_id = message.from_user.id
     
@@ -143,7 +143,7 @@ async def sequence_file_handler(client, message):
         
         await message.reply_text(f"📂 Added to sequence: {file_name}")
 
-@Client.on_message(filters.command("cancelsequence"))
+@Client.on_message(filters.private & filters.command("cancelsequence"))
 async def cancel_sequence(client, message):
     user_id = message.from_user.id
     
@@ -155,7 +155,7 @@ async def cancel_sequence(client, message):
     else:
         await message.reply_text("❓ No active sequence found to cancel.")
 
-@Client.on_message(filters.command("showsequence"))
+@Client.on_message(filters.private & filters.command("showsequence"))
 async def show_sequence(client, message):
     user_id = message.from_user.id
     
