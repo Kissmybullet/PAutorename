@@ -151,6 +151,27 @@ async def add_metadata(input_path, output_path, user_id):
 @Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
 async def auto_rename_files(client, message):
     """Main handler for auto-renaming files"""
+    # Check if message has been handled by sequence plugin
+    if hasattr(message, "_sequence_handled") and message._sequence_handled:
+        logger.info("Message already handled by sequence plugin, skipping rename")
+        return
+    
+    # Check if user is in sequence mode (database check for safety)
+    try:
+        # Import here to avoid circular imports
+        from pymongo import MongoClient
+        db_client = MongoClient(Config.DB_URL)
+        db = db_client[Config.DB_NAME]
+        sequence_data = db["sequence_data"].find_one(
+            {"user_id": message.from_user.id, "active": True}
+        )
+        if sequence_data:
+            logger.info("User is in sequence mode (DB), skipping rename")
+            return
+    except Exception as e:
+        logger.error(f"DB check error: {e}")
+        # Continue with rename process if DB check fails
+    
     user_id = message.from_user.id
     format_template = await codeflixbots.get_format_template(user_id)
     
