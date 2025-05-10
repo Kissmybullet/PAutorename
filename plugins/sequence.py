@@ -4,15 +4,15 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQ
 import re
 from collections import defaultdict
 from pymongo import MongoClient
-from config import *
 from config import Config
 
-mongo_client = MongoClient(Config.DB_URL)
-db = mongo_client["sequence_bot"]
+# Use the existing database connection from the main bot
+db_client = MongoClient(Config.DB_URL)
+db = db_client[Config.DB_NAME]
 users_collection = db["users_sequence"]
 
-app = Client("sequence_bot")
-user_sequences = {} 
+# User sequence data storage (in-memory)
+user_sequences = {}
 
 # Patterns for extracting episode numbers
 patterns = [
@@ -25,6 +25,7 @@ patterns = [
     re.compile(r'S(\d+)[^\d]*(\d+)', re.IGNORECASE),  # "S1 - 06"
     re.compile(r'(\d+)')  # Simple fallback (last resort)
 ]
+
 def extract_episode_number(filename):
     for pattern in patterns:
         match = pattern.search(filename)
@@ -32,37 +33,59 @@ def extract_episode_number(filename):
             return int(match.groups()[-1])
     return float('inf')  
 
-@app.on_message(filters.command("startsequence"))
-def start_sequence(client, message):
+@Client.on_message(filters.command("startsequence"))
+async def start_sequence(client, message):
     user_id = message.from_user.id
     if user_id not in user_sequences: 
         user_sequences[user_id] = []
-        message.reply_text("✅ Sequence mode started! Send your files now.")
+        await message.reply_text("✅ Sequence mode started! Send your files now.")
+    else:
+        await message.reply_text("⚠️ Sequence mode is already active. Send your files or use /endsequence.")
 
-@app.on_message(filters.command("endsequence"))
+@Client.on_message(filters.command("endsequence"))
 async def end_sequence(client, message):
     user_id = message.from_user.id
     if user_id not in user_sequences or not user_sequences[user_id]: 
         await message.reply_text("❌ No files in sequence!")
         return
     
-    sorted_files = sorted(user_sequences[user_id], key=lambda x: extract_episode_number(x["filename"]))
+    # Send progress message
+    progress = await message.reply_text("⏳ Processing and sorting your files...")
     
-    for file in sorted_files:
-        await client.copy_message(message.chat.id, from_chat_id=file["chat_id"], message_id=file["msg_id"])
-        await asyncio.sleep(0.1)  # 500 milliseconds delay (adjust if needed)
+    # Sort files by episode number
+    sorted_files = sorted(user_sequences[user_id], key=lambda x: extract_episode_number(x["filename"]))
+    total = len(sorted_files)
+    
+    await progress.edit_text(f"📤 Sending {total} files in sequence...")
+    
+    for i, file in enumerate(sorted_files, 1):
+        # Forward the file
+        await client.copy_message(
+            chat_id=message.chat.id, 
+            from_chat_id=file["chat_id"], 
+            message_id=file["msg_id"]
+        )
+        
+        # Update progress every 5 files
+        if i % 5 == 0:
+            await progress.edit_text(f"📤 Sent {i}/{total} files...")
+        
+        await asyncio.sleep(0.5)  # Add delay to prevent flooding
 
+    # Update user stats in database
     users_collection.update_one(
         {"user_id": user_id},
-        {"$inc": {"files_sequenced": len(user_sequences[user_id])}, "$set": {"username": message.from_user.first_name}},
+        {"$inc": {"files_sequenced": len(user_sequences[user_id])}, 
+         "$set": {"username": message.from_user.first_name}},
         upsert=True
     )
 
+    # Clear user sequence data
     del user_sequences[user_id] 
-    await message.reply_text("✅ All files have been sequenced!")
+    await progress.edit_text("✅ All files have been sequenced successfully!")
 
-@app.on_message(filters.document | filters.video | filters.audio)
-def store_file(client, message):
+@Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
+async def store_file(client, message):
     user_id = message.from_user.id
     if user_id in user_sequences: 
         file_name = (
@@ -72,18 +95,30 @@ def store_file(client, message):
             "Unknown"
         )
         user_sequences[user_id].append({"filename": file_name, "msg_id": message.id, "chat_id": message.chat.id})
-        message.reply_text("📂 Your file has been added to the sequence!")
+        await message.reply_text(f"📂 Added to sequence: {file_name}")
     
-@app.on_message(filters.command("leaderboard"))
+@Client.on_message(filters.command("leaderboard"))
 async def leaderboard(client, message):
-    top_users = users_collection.find().sort("files_sequenced", -1).limit(5) 
-    leaderboard_text = "**🏆 Top Users 🏆**\n\n"
+    top_users = list(users_collection.find().sort("files_sequenced", -1).limit(5))
+    
+    if not top_users:
+        await message.reply_text("No data available in the leaderboard yet!")
+        return
+        
+    leaderboard_text = "**🏆 Top Users - File Sequencing 🏆**\n\n"
 
     for index, user in enumerate(top_users, start=1):
-        leaderboard_text += f"**{index}. {user['username']}** - {user['files_sequenced']} files\n"
-
-    if not leaderboard_text.strip():
-        leaderboard_text = "No data available!"
+        username = user.get('username', 'Unknown User')
+        files_count = user.get('files_sequenced', 0)
+        leaderboard_text += f"**{index}. {username}** - {files_count} files\n"
 
     await message.reply_text(leaderboard_text)
 
+@Client.on_message(filters.command("cancelsequence"))
+async def cancel_sequence(client, message):
+    user_id = message.from_user.id
+    if user_id in user_sequences:
+        del user_sequences[user_id]
+        await message.reply_text("❌ Sequence mode cancelled. All queued files have been cleared.")
+    else:
+        await message.reply_text("❓ No active sequence found to cancel.")
