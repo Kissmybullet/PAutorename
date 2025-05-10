@@ -193,6 +193,7 @@ This feature helps you sort and send multiple files in the correct episode order
 
 <b>Commands:</b>
 ➲ /startsequence - Begin collecting files for sequencing
+➲ /showsequence - To view the total sequence files
 ➲ /endsequence - Process and send all files in correct order
 ➲ /cancelsequence - Cancel the current sequence operation
 ➲ /leaderboard - View top users of the sequence feature
