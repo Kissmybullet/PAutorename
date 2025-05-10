@@ -186,3 +186,20 @@ Pʀɪᴄɪɴɢ:
 
 **ᴜꜱᴇ ᴛʜᴇꜱᴇ ᴄᴏᴍᴍᴀɴᴅꜱ ᴛᴏ ᴇɴʀɪᴄʜ ʏᴏᴜʀ ᴍᴇᴅɪᴀ ᴡɪᴛʜ ᴀᴅᴅɪᴛɪᴏɴᴀʟ ᴍᴇᴛᴀᴅᴀᴛᴀ ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ!**
 """
+    SEQUENCE_TXT = """
+<b>📦 <u>SEQUENCE FILES MANAGER</u></b>
+
+This feature helps you sort and send multiple files in the correct episode order.
+
+<b>Commands:</b>
+➲ /startsequence - Begin collecting files for sequencing
+➲ /endsequence - Process and send all files in correct order
+➲ /cancelsequence - Cancel the current sequence operation
+➲ /leaderboard - View top users of the sequence feature
+
+<b>How to use:</b>
+1. Send /startsequence
+2. Upload all your files (in any order)
+3. Send /endsequence when done
+4. Bot will automatically sort and send files in correct episode order
+"""
