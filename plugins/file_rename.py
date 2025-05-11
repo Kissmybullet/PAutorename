@@ -157,6 +157,33 @@ async def add_metadata(input_path, output_path, user_id):
     
     if process.returncode != 0:
         raise RuntimeError(f"FFmpeg error: {stderr.decode()}")
+
+def get_file_duration(file_path):
+    """Get duration of media file"""
+    try:
+        metadata = extractMetadata(createParser(file_path))
+        if metadata is not None and metadata.has("duration"):
+            return str(datetime.timedelta(seconds=int(metadata.get("duration").seconds)))
+        return "00:00:00"
+    except Exception as e:
+        logger.error(f"Error getting duration: {e}")
+        return "00:00:00"
+
+def format_caption(caption_template, filename, filesize, duration):
+    """Replace caption variables with actual values"""
+    if not caption_template:
+        return None
+    
+    # Convert filesize to human-readable format
+    filesize_str = humanbytes(filesize)
+    
+    # Perform replacements
+    caption = caption_template
+    caption = caption.replace("{filename}", filename)
+    caption = caption.replace("{filesize}", filesize_str)
+    caption = caption.replace("{duration}", duration)
+    
+    return caption
         
 # Use a higher group number to ensure it only runs if the sequence handler doesn't handle the message
 @Client.on_message(filters.private & (filters.document | filters.video | filters.audio), group=1)
@@ -257,9 +284,21 @@ async def auto_rename_files(client, message):
             await msg.edit(f"Metadata processing failed: {e}")
             raise
 
+        # Get duration for video/audio files
+        duration = "00:00:00"
+        if media_type in ["video", "audio"]:
+            duration = get_file_duration(file_path)
+
         # Prepare for upload
         await msg.edit("**Preparing upload...**")
-        caption = await codeflixbots.get_caption(message.chat.id) or f"**{new_filename}**"
+        
+        # Get caption template and replace variables
+        caption_template = await codeflixbots.get_caption(message.chat.id)
+        if caption_template:
+            caption = format_caption(caption_template, new_filename, file_size, duration)
+        else:
+            caption = f"**{new_filename}**"
+            
         thumb = await codeflixbots.get_thumbnail(message.chat.id)
 
         # Handle thumbnail - initialize thumb_path explicitly
