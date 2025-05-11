@@ -11,7 +11,7 @@ async def add_caption(client, message):
 
 @Client.on_message(filters.private & filters.command('del_caption'))
 async def delete_caption(client, message):
-    caption = await madflixbotz.get_caption(message.from_user.id)  
+    caption = await codeflixbots.get_caption(message.from_user.id)  
     if not caption:
        return await message.reply_text("**You Don't Have Any Caption ❌**")
     await codeflixbots.set_caption(message.from_user.id, caption=None)
