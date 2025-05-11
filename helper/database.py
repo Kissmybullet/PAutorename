@@ -25,6 +25,12 @@ class Database:
             metadata=True,
             metadata_code="Telegram : @Codeflix_Bots",
             format_template=None,
+            premium=dict(
+                is_premium=False,
+                expiry_date=None,
+                added_on=None,
+                duration=None
+            ),
             ban_status=dict(
                 is_banned=False,
                 ban_duration=0,
@@ -181,6 +187,103 @@ class Database:
 
     async def set_video(self, user_id, video):
         await self.col.update_one({'_id': int(user_id)}, {'$set': {'video': video}})
+
+    # Premium User Methods
+    async def is_premium_user(self, id):
+        """Check if a user is premium and their subscription hasn't expired"""
+        try:
+            user = await self.col.find_one({"_id": int(id)})
+            if not user or "premium" not in user:
+                return False
+                
+            if not user["premium"].get("is_premium", False):
+                return False
+                
+            expiry = user["premium"].get("expiry_date")
+            if not expiry:
+                return False
+                
+            # Convert string to datetime
+            expiry_date = datetime.datetime.fromisoformat(expiry)
+            current_date = datetime.datetime.now(pytz.UTC)
+            
+            # Check if premium has expired
+            if current_date > expiry_date:
+                # Premium expired, update the status
+                await self.col.update_one(
+                    {"_id": int(id)},
+                    {"$set": {"premium.is_premium": False}}
+                )
+                return False
+                
+            return True
+        except Exception as e:
+            logging.error(f"Error checking premium status for user {id}: {e}")
+            return False
+    
+    async def add_premium_user(self, id, duration):
+        """Add or update a user's premium status"""
+        try:
+            # Calculate expiry date
+            current_date = datetime.datetime.now(pytz.UTC)
+            
+            # Parse duration string (format: Xm/Xh/Xd/Xmh where X is a number)
+            duration_value = int(duration[:-1] if duration[-2:] != "mh" else duration[:-2])
+            duration_unit = duration[-1] if duration[-2:] != "mh" else "mh"
+            
+            if duration_unit == "m":
+                expiry_date = current_date + datetime.timedelta(minutes=duration_value)
+            elif duration_unit == "h":
+                expiry_date = current_date + datetime.timedelta(hours=duration_value)
+            elif duration_unit == "d":
+                expiry_date = current_date + datetime.timedelta(days=duration_value)
+            elif duration_unit == "mh":  # month
+                # Add months (approximately)
+                expiry_date = current_date + datetime.timedelta(days=30 * duration_value)
+            else:
+                raise ValueError(f"Invalid duration format: {duration}")
+            
+            # Update user in database
+            await self.col.update_one(
+                {"_id": int(id)},
+                {"$set": {
+                    "premium": {
+                        "is_premium": True,
+                        "expiry_date": expiry_date.isoformat(),
+                        "added_on": current_date.isoformat(),
+                        "duration": duration
+                    }
+                }},
+                upsert=True
+            )
+            return True, expiry_date.isoformat()
+        except Exception as e:
+            logging.error(f"Error adding premium user {id}: {e}")
+            return False, str(e)
+    
+    async def get_premium_details(self, id):
+        """Get premium details for a user"""
+        try:
+            user = await self.col.find_one({"_id": int(id)})
+            if not user or "premium" not in user:
+                return None
+            
+            return user["premium"]
+        except Exception as e:
+            logging.error(f"Error getting premium details for user {id}: {e}")
+            return None
+    
+    async def remove_premium(self, id):
+        """Remove premium status from a user"""
+        try:
+            await self.col.update_one(
+                {"_id": int(id)},
+                {"$set": {"premium.is_premium": False}}
+            )
+            return True
+        except Exception as e:
+            logging.error(f"Error removing premium from user {id}: {e}")
+            return False
 
 
 codeflixbots = Database(Config.DB_URL, Config.DB_NAME)
