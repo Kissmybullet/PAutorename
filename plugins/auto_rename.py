@@ -5,6 +5,16 @@ from helper.database import codeflixbots
 @Client.on_message(filters.private & filters.command("autorename"))
 async def auto_rename_command(client, message):
     user_id = message.from_user.id
+    
+    # Check if user is premium
+    is_premium = await codeflixbots.is_premium_user(user_id)
+    
+    if not is_premium:
+        return await message.reply_text(
+            "❌ **Premium Feature** ❌\n\n"
+            "File renaming is a premium feature.\n"
+            "Contact @introvertsama to rename files."
+        )
 
     # Extract and validate the format from the command
     command_parts = message.text.split(maxsplit=1)
@@ -33,6 +43,18 @@ async def auto_rename_command(client, message):
 @Client.on_message(filters.private & filters.command("setmedia"))
 async def set_media_command(client, message):
     """Initiate media type selection with a sleek inline keyboard."""
+    user_id = message.from_user.id
+    
+    # Check if user is premium
+    is_premium = await codeflixbots.is_premium_user(user_id)
+    
+    if not is_premium:
+        return await message.reply_text(
+            "❌ **Premium Feature** ❌\n\n"
+            "Media type selection is a premium feature.\n"
+            "Contact @introvertsama to get premium access."
+        )
+        
     keyboard = InlineKeyboardMarkup([
         [InlineKeyboardButton("📜 Documents", callback_data="setmedia_document")],
         [InlineKeyboardButton("🎬 Videos", callback_data="setmedia_video")],
@@ -50,6 +72,18 @@ async def set_media_command(client, message):
 async def handle_media_selection(client, callback_query: CallbackQuery):
     """Process the user's media type selection with flair and confirmation."""
     user_id = callback_query.from_user.id
+    
+    # Check if user is premium
+    is_premium = await codeflixbots.is_premium_user(user_id)
+    
+    if not is_premium:
+        await callback_query.answer("This is a premium feature", show_alert=True)
+        return await callback_query.message.edit_text(
+            "❌ **Premium Feature** ❌\n\n"
+            "Media type selection is a premium feature.\n"
+            "Contact @introvertsama to get premium access."
+        )
+        
     media_type = callback_query.data.split("_", 1)[1].capitalize()  # Extract and capitalize media type
 
     try:
@@ -65,6 +99,6 @@ async def handle_media_selection(client, callback_query: CallbackQuery):
         await callback_query.answer("Oops, something went wrong! 😅")
         await callback_query.message.edit_text(
             f"⚠️ **Error Setting Preference** ⚠️\n"
-            f"Couldn’t set {media_type} right now. Try again later!\n"
+            f"Couldn't set {media_type} right now. Try again later!\n"
             f"Details: {str(e)}"
         )
