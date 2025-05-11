@@ -70,13 +70,15 @@ async def add_premium_command(client, message):
             except:
                 username_text = f"User ID: `{user_id}`"
                 
-            # Format expiry date for display
+            # Format expiry date for display in IST
             try:
                 expiry_date = datetime.datetime.fromisoformat(result)
-                formatted_expiry = expiry_date.strftime("%d %b %Y, %H:%M:%S UTC")
+                ist_timezone = pytz.timezone('Asia/Kolkata')
+                expiry_date_ist = expiry_date.astimezone(ist_timezone)
+                formatted_expiry = expiry_date_ist.strftime("%d %b %Y, %H:%M:%S IST")
             except:
                 formatted_expiry = result
-                
+
             await message.reply_text(
                 f"✅ Successfully added {username_text} as premium user!\n\n"
                 f"Premium will expire on: `{formatted_expiry}`"
@@ -118,32 +120,34 @@ async def check_premium_command(client, message):
     if is_premium and premium_details:
         try:
             expiry_date = datetime.datetime.fromisoformat(premium_details["expiry_date"])
-            remaining_time = expiry_date - datetime.datetime.now(pytz.UTC)
-            
+            ist_timezone = pytz.timezone('Asia/Kolkata')
+            expiry_date_ist = expiry_date.astimezone(ist_timezone)
+            remaining_time = expiry_date_ist - datetime.datetime.now(ist_timezone)
+    
             # Format remaining time nicely
             days = remaining_time.days
             hours, remainder = divmod(remaining_time.seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
-            
+    
             time_str = ""
             if days > 0:
                 time_str += f"{days} days, "
             if hours > 0 or days > 0:
                 time_str += f"{hours} hours, "
             time_str += f"{minutes} minutes"
-            
+    
             await message.reply_text(
-                f"✨ **Premium Status: Active** ✨\n\n"
-                f"**Expires on:** `{expiry_date.strftime('%d %b %Y, %H:%M:%S UTC')}`\n"
-                f"**Time remaining:** `{time_str}`\n\n"
-                f"You have access to all premium features including file renaming!"
-            )
+        f"✨ **Premium Status: Active** ✨\n\n"
+        f"**Expires on:** `{expiry_date_ist.strftime('%d %b %Y, %H:%M:%S IST')}`\n"
+        f"**Time remaining:** `{time_str}`\n\n"
+        f"You have access to all premium features including file renaming!"
+    )
         except Exception as e:
             await message.reply_text(
-                f"✨ **Premium Status: Active** ✨\n\n"
-                f"**Expires on:** `{premium_details.get('expiry_date', 'Unknown')}`\n\n"
-                f"You have access to all premium features including file renaming!"
-            )
+        f"✨ **Premium Status: Active** ✨\n\n"
+        f"**Expires on:** `{premium_details.get('expiry_date', 'Unknown')}`\n\n"
+        f"You have access to all premium features including file renaming!"
+    )
     else:
         await message.reply_text(
             "❌ **Premium Status: Inactive** ❌\n\n"
