@@ -20,6 +20,7 @@ class Config(object):
     ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '1993048420 5743248220 1214348787').split()]
     FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', 'Anime_Station_Index').split(',')
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002546420091"))
+    BOT_OWNER = int(os.environ.get("BOT_OWNER", "1993048420"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002607148767"))
     
     # wes response configuration     
