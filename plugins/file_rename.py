@@ -190,6 +190,16 @@ def format_caption(caption_template, filename, filesize, duration):
 async def auto_rename_files(client, message):
     """Main handler for auto-renaming files"""
     user_id = message.from_user.id
+
+    # Check if user is premium
+    is_premium = await codeflixbots.is_premium_user(user_id)
+    
+    if not is_premium:
+        return await message.reply_text(
+            "❌ **Premium Feature** ❌\n\n"
+            "File renaming is a premium feature.\n"
+            "Contact @introvertsama to rename files."
+        )
     
     # Skip if user is in sequence mode
     if is_in_sequence_mode(user_id):
