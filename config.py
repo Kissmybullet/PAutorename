@@ -5,13 +5,13 @@ id_pattern = re.compile(r'^.\d+$')
 
 class Config(object):
     # pyro client config
-    API_ID    = os.environ.get("API_ID", "20420188")
-    API_HASH  = os.environ.get("API_HASH", "ac372bd945f5773afe0b714c6429039b")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7871777689:AAGl6L5LU2Zzbght6QvrRjAaz90tOS6O5Vg") 
+    API_ID    = os.environ.get("API_ID", "0")
+    API_HASH  = os.environ.get("API_HASH", "0")
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7871777689:") 
 
     # database config
-    DB_NAME = os.environ.get("DB_NAME","dante")     
-    DB_URL  = os.environ.get("DB_URL","mongodb+srv://nitus1673:itachi@cluster0.b9uq1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    DB_NAME = os.environ.get("DB_NAME","Station")     
+    DB_URL  = os.environ.get("DB_URL","mongodb+srv://@cluster0.b9uq1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     PORT = os.environ.get("PORT", "8080")
  
     # other configs
