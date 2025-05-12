@@ -208,3 +208,91 @@ async def remove_premium_command(client, message):
     except Exception as e:
         logger.error(f"Error in remove_premium_command: {e}")
         await message.reply_text(f"❌ An error occurred: {str(e)}")
+
+# Add this at the end of the plugins/premium_user.py file
+
+# Command to list all premium users
+@Client.on_message(filters.command("premiumusers") & filters.user(Config.BOT_OWNER))
+async def list_premium_users(client, message):
+    """List all active premium users"""
+    try:
+        # Get all users from database
+        all_users = await codeflixbots.get_all_users()
+        
+        # Counter for premium users
+        premium_count = 0
+        premium_users_list = []
+        
+        # Iterate through all users and check premium status
+        async for user in all_users:
+            user_id = user["_id"]
+            
+            # Skip if no premium info or not premium
+            if "premium" not in user or not user["premium"].get("is_premium", False):
+                continue
+                
+            # Check if premium has expired
+            expiry = user["premium"].get("expiry_date")
+            if not expiry:
+                continue
+                
+            # Convert string to datetime
+            try:
+                expiry_date = datetime.datetime.fromisoformat(expiry)
+                current_date = datetime.datetime.now(pytz.UTC)
+                
+                # Skip if premium has expired
+                if current_date > expiry_date:
+                    continue
+                    
+                # Premium is active
+                premium_count += 1
+                
+                # Format expiry date
+                ist_timezone = pytz.timezone('Asia/Kolkata')
+                expiry_date_ist = expiry_date.astimezone(ist_timezone)
+                formatted_expiry = expiry_date_ist.strftime("%d %b %Y")
+                
+                # Try to get user info
+                try:
+                    user_info = await client.get_users(user_id)
+                    if user_info.username:
+                        user_display = f"@{user_info.username}"
+                    else:
+                        user_display = f"{user_info.first_name} [{user_id}]"
+                except:
+                    user_display = f"User ID: {user_id}"
+                    
+                # Add to list
+                premium_users_list.append(f"{premium_count}. {user_display} (Expires: {formatted_expiry})")
+                
+            except Exception as e:
+                logger.error(f"Error processing user {user_id}: {e}")
+                continue
+        
+        # Create message with pagination if needed
+        if premium_count == 0:
+            await message.reply_text("No active premium users found.")
+            return
+            
+        # Split into chunks of 20 users each
+        chunk_size = 20
+        chunks = [premium_users_list[i:i + chunk_size] for i in range(0, len(premium_users_list), chunk_size)]
+        
+        # Send first page
+        await message.reply_text(
+            f"**Total Premium Users: {premium_count}**\n\n" + 
+            "\n".join(chunks[0]) +
+            (f"\n\nPage 1/{len(chunks)}" if len(chunks) > 1 else "")
+        )
+        
+        # Send additional pages if needed
+        for i, chunk in enumerate(chunks[1:], 2):
+            await message.reply_text(
+                "\n".join(chunk) +
+                f"\n\nPage {i}/{len(chunks)}"
+            )
+    
+    except Exception as e:
+        logger.error(f"Error in list_premium_users: {e}")
+        await message.reply_text(f"❌ An error occurred: {str(e)}")
