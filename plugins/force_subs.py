@@ -5,7 +5,7 @@ from pyrogram.errors import UserNotParticipant
 from config import Config
 
 FORCE_SUB_CHANNELS = Config.FORCE_SUB_CHANNELS
-IMAGE_URL = "https://graph.org/file/a27d85469761da836337c.jpg"
+IMAGE_URL = "https://i.ibb.co/gFQFknCN/d8a33273f73c.jpg"
 
 async def not_subscribed(_, __, message):
     for channel in FORCE_SUB_CHANNELS:
@@ -65,7 +65,7 @@ async def check_subscription(client, callback_query: CallbackQuery):
             not_joined_channels.append(channel)
 
     if not not_joined_channels:
-        new_text = "**ʏᴏᴜ ʜᴀᴠᴇ ᴊᴏɪɴᴇᴅ ᴀʟʟ ᴛʜᴇ ʀᴇǫᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟs. ᴛʜᴀɴᴋ ʏᴏᴜ! 😊 /start ɴᴏᴡ**"
+        new_text = "**ʏᴏᴜ ʜᴀᴠᴇ ᴊᴏɪɴᴇᴅ ᴀʟʟ ᴛʜᴇ ʀᴇǫᴜɪʀᴇᴅ ᴄʜᴀɴɴᴇʟs. ɢᴏᴏᴅ ʙᴏʏ! 🔥 /start ɴᴏᴡ**"
         if callback_query.message.caption != new_text:
             await callback_query.message.edit_caption(
                 caption=new_text,
