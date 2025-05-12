@@ -321,6 +321,19 @@ async def auto_rename_files(client, message):
         if thumb_path:
             thumb_path = await process_thumbnail(thumb_path)
 
+        # Get user's media preference
+        user_media_preference = await codeflixbots.get_media_preference(user_id)
+        logger.info(f"User {user_id} media preference: {user_media_preference}")
+        
+        # If no preference set, use original media type
+        if not user_media_preference:
+            user_media_preference = media_type
+            logger.info(f"No preference set, using original type: {media_type}")
+        else:
+            # Convert to lowercase for consistent comparison
+            user_media_preference = user_media_preference.lower()
+            logger.info(f"Using user's preference: {user_media_preference}")
+
         # Upload file
         await msg.edit("**Uploading...**")
         try:
@@ -335,12 +348,22 @@ async def auto_rename_files(client, message):
             if thumb_path:
                 upload_params['thumb'] = thumb_path
 
-            if media_type == "document":
+            # Use user's media preference for sending
+            if user_media_preference == "document":
                 await client.send_document(document=file_path, **upload_params)
-            elif media_type == "video":
+            elif user_media_preference == "video":
                 await client.send_video(video=file_path, **upload_params)
-            elif media_type == "audio":
+            elif user_media_preference == "audio":
                 await client.send_audio(audio=file_path, **upload_params)
+            else:
+                # Fallback to original media type if preference is invalid
+                logger.warning(f"Invalid preference: {user_media_preference}, using original: {media_type}")
+                if media_type == "document":
+                    await client.send_document(document=file_path, **upload_params)
+                elif media_type == "video":
+                    await client.send_video(video=file_path, **upload_params)
+                elif media_type == "audio":
+                    await client.send_audio(audio=file_path, **upload_params)
 
             await msg.delete()
         except Exception as e:
