@@ -13,7 +13,7 @@ async def auto_rename_command(client, message):
         return await message.reply_text(
             "❌ **Premium Feature** ❌\n\n"
             "File renaming is a premium feature.\n"
-            "Contact @introvertsama to rename files."
+            "Contact @Union_Owner to rename files."
         )
 
     # Extract and validate the format from the command
