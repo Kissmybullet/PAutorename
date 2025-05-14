@@ -151,7 +151,7 @@ async def check_premium_command(client, message):
     else:
         await message.reply_text(
             "❌ **Premium Status: Inactive** ❌\n\n"
-            "You don't have premium access. Contact @introvertsama to get premium and unlock file renaming features!"
+            "You don't have premium access. Contact @Union_Owner to get premium and unlock file renaming features!"
         )
 
 
