@@ -39,8 +39,8 @@ async def start(client, message: Message):
         ],
         
         [
-            InlineKeyboardButton('• ᴜᴘᴅᴀᴛᴇs', url='https://t.me/+ecWFJBaAGZpjMGY1'),
-            InlineKeyboardButton('sᴜᴘᴘᴏʀᴛ •', url='https://t.me/weebs_talk_station')
+            InlineKeyboardButton('• ᴜᴘᴅᴀᴛᴇs', url='https://t.me/+Union_Botss'),
+            InlineKeyboardButton('sᴜᴘᴘᴏʀᴛ •', url='https://t.me/weebs_Union')
         ],
         [
             InlineKeyboardButton('• ᴀʙᴏᴜᴛ', callback_data='about')
@@ -78,7 +78,7 @@ async def cb_handler(client, query: CallbackQuery):
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ᴍʏ ᴀʟʟ ᴄᴏᴍᴍᴀɴᴅs •", callback_data='help')],
                 [InlineKeyboardButton("• ᴘʀᴇᴍɪᴜᴍ •", callback_data='premiumx')],
-                [InlineKeyboardButton('• ᴜᴘᴅᴀᴛᴇs', url='https://t.me/AS_Networks'), InlineKeyboardButton('sᴜᴘᴘᴏʀᴛ •', url='https://t.me/weebs_talk_station')],
+                [InlineKeyboardButton('• ᴜᴘᴅᴀᴛᴇs', url='https://t.me/Union_Association'), InlineKeyboardButton('sᴜᴘᴘᴏʀᴛ •', url='https://t.me/weebs_union')],
                 [InlineKeyboardButton('• ᴀʙᴏᴜᴛ', callback_data='about'), InlineKeyboardButton('sᴏᴜʀᴄᴇ •', callback_data='source')]
             ])
         )
@@ -87,7 +87,7 @@ async def cb_handler(client, query: CallbackQuery):
             text=Txt.CAPTION_TXT,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ", url='https://t.me/weebs_talk_station'), InlineKeyboardButton("ʙᴀᴄᴋ •", callback_data="help")]
+                [InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ", url='https://t.me/weebs_union'), InlineKeyboardButton("ʙᴀᴄᴋ •", callback_data="help")]
             ])
         )
 
@@ -116,7 +116,7 @@ async def cb_handler(client, query: CallbackQuery):
             text=Txt.DONATE_TXT,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ʙᴀᴄᴋ", callback_data="help"), InlineKeyboardButton("ᴏᴡɴᴇʀ •", url='https://t.me/IntrovertSama')]
+                [InlineKeyboardButton("• ʙᴀᴄᴋ", callback_data="help"), InlineKeyboardButton("ᴏᴡɴᴇʀ •", url='https://t.me/Union_Owner')]
             ])
         )
     elif data == "file_names":
@@ -161,14 +161,14 @@ async def cb_handler(client, query: CallbackQuery):
             caption=Txt.PREMIUM_TXT,
             reply_markup=InlineKeyboardMarkup([
                 [InlineKeyboardButton("• ᴘʟᴀɴs •", callback_data='plans')],
-                [InlineKeyboardButton("• ʙᴀᴄᴋ", callback_data="help"), InlineKeyboardButton("ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ •", url='https://t.me/IntrovertSama')]
+                [InlineKeyboardButton("• ʙᴀᴄᴋ", callback_data="help"), InlineKeyboardButton("ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ •", url='https://t.me/union_owner')]
             ])
         )
     elif data == "plans":
         await query.message.edit_caption(
             caption=Txt.PREPLANS_TXT,
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• ᴄʟᴏsᴇ", callback_data="close"), InlineKeyboardButton("ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ •", url='https://t.me/introvertsama')]
+                [InlineKeyboardButton("• ᴄʟᴏsᴇ", callback_data="close"), InlineKeyboardButton("ʙᴜʏ ᴘʀᴇᴍɪᴜᴍ •", url='https://t.me/union_owner')]
             ])
         )
     elif data == "about":
@@ -176,8 +176,8 @@ async def cb_handler(client, query: CallbackQuery):
             text=Txt.ABOUT_TXT,
             disable_web_page_preview=True,
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ", url='https://t.me/weebs_talk_station'), InlineKeyboardButton("ᴄᴏᴍᴍᴀɴᴅs •", callback_data="help")],
-                [InlineKeyboardButton("• ᴅᴇᴠᴇʟᴏᴘᴇʀ", url='https://t.me/IntrovertSama'), InlineKeyboardButton("ɴᴇᴛᴡᴏʀᴋ •", url='https://t.me/AS_Networks')],
+                [InlineKeyboardButton("• sᴜᴘᴘᴏʀᴛ", url='https://t.me/weebs_union'), InlineKeyboardButton("ᴄᴏᴍᴍᴀɴᴅs •", callback_data="help")],
+                [InlineKeyboardButton("• ᴅᴇᴠᴇʟᴏᴘᴇʀ", url='https://t.me/union_owner'), InlineKeyboardButton("ɴᴇᴛᴡᴏʀᴋ •", url='https://t.me/Union_Association')],
                 [InlineKeyboardButton("• ʙᴀᴄᴋ •", callback_data="home")]
             ])
         )
@@ -194,7 +194,7 @@ async def cb_handler(client, query: CallbackQuery):
 @Client.on_message(filters.command("donate"))
 async def donation(client, message):
     buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton(text="ʙᴀᴄᴋ", callback_data="help"), InlineKeyboardButton(text="ᴏᴡɴᴇʀ", url='https://t.me/sewxiy')]
+        [InlineKeyboardButton(text="ʙᴀᴄᴋ", callback_data="help"), InlineKeyboardButton(text="ᴏᴡɴᴇʀ", url='https://t.me/Union_Owner')]
     ])
     yt = await message.reply_photo(photo='https://i.ibb.co/S7vgk8Hj/c8d9f3039813.jpg', caption=Txt.DONATE_TXT, reply_markup=buttons)
     await asyncio.sleep(300)
@@ -206,7 +206,7 @@ async def donation(client, message):
 async def getpremium(bot, message):
     buttons = InlineKeyboardMarkup([
         [InlineKeyboardButton("• ᴘʟᴀɴs •", callback_data='plans')],
-        [InlineKeyboardButton("ᴏᴡɴᴇʀ", url="https://t.me/IntrovertSama"), InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]
+        [InlineKeyboardButton("ᴏᴡɴᴇʀ", url="https://t.me/union_owner"), InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]
     ])
     yt = await message.reply_photo(photo='https://i.ibb.co/S7vgk8Hj/c8d9f3039813.jpg', caption=Txt.PREMIUM_TXT, reply_markup=buttons)
     await asyncio.sleep(300)
@@ -217,7 +217,7 @@ async def getpremium(bot, message):
 @Client.on_message(filters.command("plan"))
 async def premium(bot, message):
     buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("sᴇɴᴅ ss", url="https://t.me/IntrovertSama"), InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]
+        [InlineKeyboardButton("sᴇɴᴅ ss", url="https://t.me/union_owner"), InlineKeyboardButton("ᴄʟᴏsᴇ", callback_data="close")]
     ])
     yt = await message.reply_photo(photo='https://i.ibb.co/S7vgk8Hj/c8d9f3039813.jpg', caption=Txt.PREPLANS_TXT, reply_markup=buttons)
     await asyncio.sleep(300)
