@@ -1,3 +1,5 @@
+import sys
+print(sys.path)
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from config import ADMIN as AUTH_USERS
@@ -6,7 +8,11 @@ import os
 @Client.on_message(filters.document | filters.video | filters.audio)
 async def rename_handler(client: Client, message: Message):
     # Only allow users in AUTH_USERS
-    if message.from_user.id not in AUTH_USERS:
+    try:
+    from config import ADMIN as AUTH_USERS
+except Exception as e:
+    print(f"Failed to import AUTH_USERS: {e}")
+    AUTH_USERS = [6975428639]  # fallback ID
         return await message.reply_text(
             text="❌ 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲 ❌\n\nFile renaming is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲.\nContact @aaru_2075 to rename files.",
             quote=True
