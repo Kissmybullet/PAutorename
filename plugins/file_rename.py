@@ -196,9 +196,9 @@ async def auto_rename_files(client, message):
     
     if not is_premium:
         return await message.reply_text(
-            "❌ **Premium Feature** ❌\n\n"
-            "File renaming is a premium feature.\n"
-            "Contact @introvertsama to rename files."
+            "❌ **𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲** ❌\n\n"
+            "File renaming is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲.\n"
+            "Contact @aaru_2075 to rename files."
         )
     
     # Skip if user is in sequence mode
