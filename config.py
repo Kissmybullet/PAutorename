@@ -7,7 +7,7 @@ class Config(object):
     # pyro client config
     API_ID    = os.environ.get("API_ID", "22451708")
     API_HASH  = os.environ.get("API_HASH", "288f749fcef814c1ec90b66936158c68")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "") 
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8126440021:AAGRYq6Xeq1QvZHjJkPI6N4-ToM0gXDeTe8") 
 
     # database config
     DB_NAME = os.environ.get("DB_NAME","rename")     
