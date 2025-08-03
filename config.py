@@ -22,6 +22,7 @@ class Config(object):
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002887783820"))
     BOT_OWNER = int(os.environ.get("BOT_OWNER", "6975428639"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002887783820"))
+    FORCE_SUB_CHANNELS = ["Mortals_Log_Channel"]
     
     # wes response configuration     
     WEBHOOK = bool(os.environ.get("WEBHOOK", "True"))
