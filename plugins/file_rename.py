@@ -186,7 +186,7 @@ def format_caption(caption_template, filename, filesize, duration):
     return caption
         
 # Use a higher group number to ensure it only runs if the sequence handler doesn't handle the message
-@Client.on_message(filters.private & (filters.document | filters.video | filters.audio), group=1)
+@Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
 async def auto_rename_files(client, message):
     """Main handler for auto-renaming files"""
     user_id = message.from_user.id
