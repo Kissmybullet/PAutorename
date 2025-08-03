@@ -1,6 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from config import AUTH_USERS
+from config import ADMIN as AUTH_USERS
 import os
 
 @Client.on_message(filters.document | filters.video | filters.audio)
@@ -28,7 +28,7 @@ async def rename_handler(client: Client, message: Message):
         return await message.reply_text("❗ Timed out. Please send the file again and respond quicker.")
 
     new_file_name = response.text.strip()
-    if not "." in new_file_name:
+    if "." not in new_file_name:
         return await message.reply("❌ Invalid file name. Must include extension (e.g., `.mkv`, `.mp4`, `.zip`).")
 
     await message.reply_text("⏳ Downloading...")
