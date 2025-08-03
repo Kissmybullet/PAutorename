@@ -5,13 +5,13 @@ id_pattern = re.compile(r'^.\d+$')
 
 class Config(object):
     # pyro client config
-    API_ID    = os.environ.get("API_ID", "0")
-    API_HASH  = os.environ.get("API_HASH", "0")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7871777689:") 
+    API_ID    = os.environ.get("API_ID", "22451708")
+    API_HASH  = os.environ.get("API_HASH", "288f749fcef814c1ec90b66936158c68")
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8230101234:AAHj4sF3TSSLbU8vCBL7zPLBPeboZQL3_F0") 
 
     # database config
     DB_NAME = os.environ.get("DB_NAME","rename")     
-    DB_URL  = os.environ.get("DB_URL","mongodb+srv://drapixstore:Y7DJWJCCpBQClI5o@cluster0.fq7ee6x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    DB_URL  = os.environ.get("DB_URL","mongodb+srv://ganeshgite708:vhovfzpFGRTKVI2O@cluster0.sctr2i3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     PORT = os.environ.get("PORT", "8080")
  
     # other configs
@@ -19,9 +19,9 @@ class Config(object):
     START_PIC   = os.environ.get("START_PIC", "https://i.ibb.co/kgSv5sKP/3c10c3a8fc8d.jpg")
     ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '1993048420 5743248220 1214348787').split()]
     FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', '').split(',')
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002667013291"))
-    BOT_OWNER = int(os.environ.get("BOT_OWNER", "7518139247"))
-    DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002667013291"))
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002887783820"))
+    BOT_OWNER = int(os.environ.get("BOT_OWNER", "6975428639"))
+    DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002887783820"))
     
     # wes response configuration     
     WEBHOOK = bool(os.environ.get("WEBHOOK", "True"))
