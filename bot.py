@@ -27,7 +27,7 @@ def run_flask():
 
 
 # Setting SUPPORT_CHAT directly here
-SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002607710343"))
+SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002096791359"))
 
 PORT = Config.PORT
 
@@ -78,7 +78,7 @@ class Bot(Client):
                     ),
                     reply_markup=InlineKeyboardMarkup(
                         [[
-                            InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url="https://t.me/weebs_union")
+                            InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url="https://t.me/manga_Campus_chat")
                         ]]
                     )
                 )
