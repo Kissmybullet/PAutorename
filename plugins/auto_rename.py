@@ -1,18 +1,19 @@
-import sys
-print(sys.path)
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from config import ADMIN as AUTH_USERS
 import os
+import re
+
+# Try to import ADMIN list from config.py
+try:
+    from config import ADMIN as AUTH_USERS
+except Exception as e:
+    print(f"Failed to import AUTH_USERS from config: {e}")
+    AUTH_USERS = [6975428639]  # fallback owner ID
 
 @Client.on_message(filters.document | filters.video | filters.audio)
 async def rename_handler(client: Client, message: Message):
     # Only allow users in AUTH_USERS
-    try:
-    from config import ADMIN as AUTH_USERS
-except Exception as e:
-    print(f"Failed to import AUTH_USERS: {e}")
-    AUTH_USERS = [6975428639]  # fallback ID
+    if message.from_user.id not in AUTH_USERS:
         return await message.reply_text(
             text="❌ 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲 ❌\n\nFile renaming is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲.\nContact @aaru_2075 to rename files.",
             quote=True
@@ -24,18 +25,17 @@ except Exception as e:
     file_size = media.file_size
     file_id = media.file_id
 
-    # Ask for new file name
     await message.reply_text(f"📁 Current file name:\n`{file_name}`\n\nSend me new file name (with extension):")
 
-    # Listen for reply
+    # Wait for user's new filename input
     try:
         response = await client.listen(message.chat.id, timeout=60)
     except TimeoutError:
         return await message.reply_text("❗ Timed out. Please send the file again and respond quicker.")
 
     new_file_name = response.text.strip()
-    if "." not in new_file_name:
-        return await message.reply("❌ Invalid file name. Must include extension (e.g., `.mkv`, `.mp4`, `.zip`).")
+    if '.' not in new_file_name:
+        return await message.reply_text("❌ Invalid file name. Must include extension (e.g., `.mkv`, `.mp4`, `.zip`).")
 
     await message.reply_text("⏳ Downloading...")
 
@@ -52,3 +52,4 @@ except Exception as e:
     )
 
     os.remove(new_path)
+
