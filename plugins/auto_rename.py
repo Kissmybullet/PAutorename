@@ -11,9 +11,9 @@ async def auto_rename_command(client, message):
     
     if not is_premium:
         return await message.reply_text(
-            "❌ **Premium Feature** ❌\n\n"
-            "File renaming is a premium feature.\n"
-            "Contact @Union_Owner to rename files."
+            "❌ **𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲** ❌\n\n"
+            "File renaming is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲.\n"
+            "Contact @aaru_2075 to rename files."
         )
 
     # Extract and validate the format from the command
@@ -50,9 +50,9 @@ async def set_media_command(client, message):
     
     if not is_premium:
         return await message.reply_text(
-            "❌ **Premium Feature** ❌\n\n"
-            "Media type selection is a premium feature.\n"
-            "Contact @Union_Owner to get premium access."
+            "<blockquote>❌ **𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲** ❌</blockquote>\n\n"
+            "Media type selection is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲.\n"
+            "Contact @aaru_2075 to get premium access."
         )
         
     keyboard = InlineKeyboardMarkup([
@@ -77,11 +77,11 @@ async def handle_media_selection(client, callback_query: CallbackQuery):
     is_premium = await codeflixbots.is_premium_user(user_id)
     
     if not is_premium:
-        await callback_query.answer("This is a premium feature", show_alert=True)
+        await callback_query.answer("This is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲", show_alert=True)
         return await callback_query.message.edit_text(
-            "❌ **Premium Feature** ❌\n\n"
-            "Media type selection is a premium feature.\n"
-            "Contact @Union_Owner to get premium access."
+            "❌ **𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲** ❌\n\n"
+            "Media type selection is a 𝗣𝗿𝗲𝗺𝗶𝘂𝗺 𝗙𝗲𝗮𝘁𝘂𝗿𝗲.\n"
+            "Contact @aaru_2075 to get premium access."
         )
         
     media_type = callback_query.data.split("_", 1)[1].capitalize()  # Extract and capitalize media type
