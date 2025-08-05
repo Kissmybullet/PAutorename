@@ -1,21 +1,17 @@
-import aiohttp, asyncio, warnings, pytz
+import os
+import time
 from datetime import datetime, timedelta
 from pytz import timezone
-from pyrogram import Client, __version__
-from pyrogram.raw.all import layer
-from config import Config
+from pyrogram import Client
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiohttp import web
+from flask import Flask, jsonify
+from config import Config
 from route import web_server
 import pyrogram.utils
-import pyromod
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import os
-from flask import Flask, jsonify
-import time
 
 pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
 
-# Create Flask app
 flask_app = Flask(__name__)
 
 @flask_app.route('/uptime', methods=['GET'])
@@ -25,14 +21,10 @@ def uptime():
 def run_flask():
     flask_app.run(host="0.0.0.0", port=int(os.environ.get("FLASK_PORT", 5000)))
 
-
-# Setting SUPPORT_CHAT directly here
 SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002096791359"))
-
 PORT = Config.PORT
 
 class Bot(Client):
-
     def __init__(self):
         super().__init__(
             name="codeflixbots",
@@ -43,7 +35,6 @@ class Bot(Client):
             plugins={"root": "plugins"},
             sleep_threshold=15,
         )
-        # Initialize the bot's start time for uptime calculation
         self.start_time = time.time()
 
     async def start(self, *args, **kwargs):
@@ -52,23 +43,18 @@ class Bot(Client):
         self.mention = me.mention
         self.username = me.username  
         self.uptime = Config.BOT_UPTIME     
+
         if Config.WEBHOOK:
             app = web.AppRunner(await web_server())
             await app.setup()       
             await web.TCPSite(app, "0.0.0.0", PORT).start()     
-        print(f"{me.first_name} Is Started.....✨️")
 
-        # Calculate uptime using timedelta
         uptime_seconds = int(time.time() - self.start_time)
         uptime_string = str(timedelta(seconds=uptime_seconds))
 
         for chat_id in [Config.LOG_CHANNEL, SUPPORT_CHAT]:
             try:
                 curr = datetime.now(timezone("Asia/Kolkata"))
-                date = curr.strftime('%d %B, %Y')
-                time_str = curr.strftime('%I:%M:%S %p')
-                
-                # Send the message with the photo
                 await self.send_photo(
                     chat_id=chat_id,
                     photo=Config.START_PIC,
@@ -77,12 +63,9 @@ class Bot(Client):
                         f"ɪ ᴅɪᴅɴ'ᴛ sʟᴇᴘᴛ sɪɴᴄᴇ​: `{uptime_string}`"
                     ),
                     reply_markup=InlineKeyboardMarkup(
-                        [[
-                            InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url="https://t.me/manga_Campus_chat")
-                        ]]
+                        [[InlineKeyboardButton("ᴜᴘᴅᴀᴛᴇs", url="https://t.me/manga_Campus_chat")]]
                     )
                 )
-
             except Exception as e:
                 print(f"Failed to send message in chat {chat_id}: {e}")
 

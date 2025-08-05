@@ -51,12 +51,12 @@ SEASON_EPISODE_PATTERNS = [
 
 # Quality detection patterns
 QUALITY_PATTERNS = [
-    (re.compile(r'\b(\d{3,4}[pi])\b', re.IGNORECASE), lambda m: m.group(1)),  # 1080p, 720p
+    (re.compile(r'\b(\d{3,4}[pi])\b', re.IGNORECASE), lambda m: m.groups()[0] if m.groups() else "Unknown"),
     (re.compile(r'\b(4k|2160p)\b', re.IGNORECASE), lambda m: "4k"),
     (re.compile(r'\b(2k|1440p)\b', re.IGNORECASE), lambda m: "2k"),
-    (re.compile(r'\b(HDRip|HDTV)\b', re.IGNORECASE), lambda m: m.group(1)),
-    (re.compile(r'\b(4kX264|4kx265)\b', re.IGNORECASE), lambda m: m.group(1)),
-    (re.compile(r'\[(\d{3,4}[pi])\]', re.IGNORECASE), lambda m: m.group(1))  # [1080p]
+    (re.compile(r'\b(HDRip|HDTV)\b', re.IGNORECASE), lambda m: m.groups()[0] if m.groups() else "Unknown"),
+    (re.compile(r'\b(4kX264|4kx265)\b', re.IGNORECASE), lambda m: m.groups()[0] if m.groups() else "Unknown"),
+    (re.compile(r'\[(\d{3,4}[pi])\]', re.IGNORECASE), lambda m: m.groups()[0] if m.groups() else "Unknown")
 ]
 
 def is_in_sequence_mode(user_id):
@@ -72,8 +72,9 @@ def extract_season_episode(filename):
     for pattern, (season_group, episode_group) in SEASON_EPISODE_PATTERNS:
         match = pattern.search(filename)
         if match:
-            season = match.group(1) if season_group else None
-            episode = match.group(2) if episode_group else match.group(1)
+            groups = match.groups()
+            season = groups[0] if season_group and len(groups) > 0 else None
+            episode = groups[1] if episode_group and len(groups) > 1 else (groups[0] if len(groups) > 0 else None)
             logger.info(f"Extracted season: {season}, episode: {episode} from {filename}")
             return season, episode
     logger.warning(f"No season/episode pattern matched for {filename}")
@@ -271,6 +272,10 @@ async def auto_rename_files(client, message):
         try:
             # Extract metadata from filename
             season, episode = extract_season_episode(file_name)
+            if season is None and episode is None:
+                await message.reply_text(f"No season/episode pattern matched for: `{file_name}`")
+                # Optionally, return here to stop further processing
+                # return
             quality = extract_quality(file_name)
             
             # Replace placeholders in template

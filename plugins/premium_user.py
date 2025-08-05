@@ -83,6 +83,14 @@ async def add_premium_command(client, message):
                 f"✅ Successfully added {username_text} as premium user!\n\n"
                 f"Premium will expire on: `{formatted_expiry}`"
             )
+            # Notify the user directly
+            try:
+                await client.send_message(
+                    user_id,
+                    f"🎉 You have been granted premium access!\n\nYour premium will expire on: `{formatted_expiry}`\nEnjoy all premium features!"
+                )
+            except Exception as e:
+                logger.warning(f"Could not notify user {user_id} about premium add: {e}")
         else:
             await message.reply_text(f"❌ Failed to add premium user: {result}")
     
@@ -202,6 +210,14 @@ async def remove_premium_command(client, message):
                 username_text = f"User ID: `{user_id}`"
                 
             await message.reply_text(f"✅ Successfully removed premium access from {username_text}")
+            # Notify the user directly
+            try:
+                await client.send_message(
+                    user_id,
+                    "⚠️ Your premium access has been removed. Contact support if you have questions."
+                )
+            except Exception as e:
+                logger.warning(f"Could not notify user {user_id} about premium removal: {e}")
         else:
             await message.reply_text("❌ Failed to remove premium access")
     
