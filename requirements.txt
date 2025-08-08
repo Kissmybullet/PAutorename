@@ -1,4 +1,4 @@
-pyrogram
+pyrogram>=2.0.106
 motor
 dnspython
 hachoir
@@ -9,3 +9,4 @@ humanize
 pyromod
 ffmpeg-python
 flask
+TgCrypto>=1.2.5
