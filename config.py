@@ -12,7 +12,7 @@ class Config(object):
     # database config
     DB_NAME = os.environ.get("DB_NAME","rename")     
     DB_URL  = os.environ.get("DB_URL","mongodb+srv://ganeshgite708:vhovfzpFGRTKVI2O@cluster0.sctr2i3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-    PORT = os.environ.get("PORT", "8080")
+    PORT = os.environ.get("PORT", "8060")
  
     # other configs
     BOT_UPTIME = time.time()
