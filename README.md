@@ -75,9 +75,16 @@ delthumb - To delete current thumbnail.
 set_caption - set a custom caption.
 see_caption - see your custom caption.
 del_caption - delete custom caption.
+startsequence - Begin collecting files for sequencing  
+showsequence - To view the total sequence files  
+endsequence - Process and send all files in correct order  
+cancelsequence - Cancel the current sequence operation  
+leaderboard - View top users of the sequence feature
 restart - To restart the bot [FOR ADMINS USE ONLY]
-broadcast - Message Broadcast command [FOR ADMINS USE ONLY].
-status - Check bot status [FOR ADMINS USE ONLY].
+broadcast - Message Broadcast command [FOR ADMINS USE ONLY]
+status - Check bot status [FOR ADMINS USE ONLY]
+premiumusers - Total premium users [FOR ADMINS USE ONLY]
+addpremium - <userid> <time> [OWNER ONLY]
 ```
 </details>
 ━━━━━━━━━━━━━━━━━━━━
