@@ -10,7 +10,7 @@ from config import Config
 from route import web_server
 import pyrogram.utils
 
-pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
+pyrogram.utils.MIN_CHANNEL_ID = -1002826558276
 
 flask_app = Flask(__name__)
 
