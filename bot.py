@@ -21,7 +21,7 @@ def uptime():
 def run_flask():
     flask_app.run(host="0.0.0.0", port=int(os.environ.get("FLASK_PORT", 5000)))
 
-SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002096791359"))
+SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002826558276"))
 PORT = Config.PORT
 
 class Bot(Client):
