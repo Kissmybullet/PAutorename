@@ -61,6 +61,8 @@ QUALITY_PATTERNS = [
 
 # ✨ NEW: Enhanced title detection patterns
 TITLE_PATTERNS = [
+    # Show name before - E## pattern (e.g., "Serial Lain - E03")
+    (re.compile(r'^(.+?)\s*-\s*E\d+', re.IGNORECASE), 'episode_dash'),
     # Show name before season/episode (e.g., "The Office S01E01")
     (re.compile(r'^(.+?)\s*[Ss]\d+[Ee]\d+', re.IGNORECASE), 'show'),
     # Show name in brackets before season (e.g., "[Attack on Titan] S01E01")
@@ -124,19 +126,7 @@ def extract_title(filename):
     logger.warning(f"No title pattern matched for {filename}")
     return "Unknown Title"
 
-def extract_audio_info(filename):
-    """Extract audio information from filename"""
-    logger.info(f"Attempting to extract audio info from: {filename}")
-    
-    audio_info = {}
-    
-    for pattern, info_type in AUDIO_PATTERNS:
-        match = pattern.search(filename)
-        if match:
-            value = match.groups()[0]
-            if info_type not in audio_info:  # Don't overwrite if already found
-                audio_info[info_type] = value
-                logger.info(f"Found audio {info_type}: {value}")
+
     
     # Build comprehensive audio description
     audio_parts = []
@@ -402,15 +392,28 @@ Auto-detection results for {file_name}:
                 '{episode}': episode or 'XX',
                 '{quality}': quality,
                 '{title}': title,                    # ✨ NEW: Auto-detected title
-                '{audio}': audio_info,              # ✨ NEW: Auto-detected audio info
+                '{audio}': audio_info,              # ✨ NEW: Auto-detected audio info (empty if no Sub/Dub/Dual)
                 'Season': season or 'XX',
                 'Episode': episode or 'XX',
                 'QUALITY': quality,
                 'Title': title,                     # ✨ NEW: Capitalized title
                 'TITLE': title.upper() if title != "Unknown Title" else "UNKNOWN",  # ✨ NEW: Uppercase title
-                'Audio': audio_info,                # ✨ NEW: Capitalized audio
-                'AUDIO': audio_info.upper() if audio_info != "Unknown Audio" else "UNKNOWN"  # ✨ NEW: Uppercase audio
+                'Audio': audio_info,                # ✨ NEW: Capitalized audio (empty if no Sub/Dub/Dual)
+                'AUDIO': audio_info.upper() if audio_info else ""  # ✨ NEW: Uppercase audio (empty if no Sub/Dub/Dual)
             }
+            
+            # Clean up the template by removing empty audio placeholders if no audio detected
+            if not audio_info:  # If audio_info is empty
+                # Remove common audio placeholder patterns that would leave empty brackets/spaces
+                format_template = re.sub(r'\s*\[{audio}\]\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*\[{Audio}\]\s*', '', format_template, flags=re.IGNORECASE) 
+                format_template = re.sub(r'\s*\[{AUDIO}\]\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*-\s*{audio}\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*-\s*{Audio}\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*-\s*{AUDIO}\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*{audio}\s*-\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*{Audio}\s*-\s*', '', format_template, flags=re.IGNORECASE)
+                format_template = re.sub(r'\s*{AUDIO}\s*-\s*', '', format_template, flags=re.IGNORECASE)
             
             for placeholder, value in replacements.items():
                 format_template = format_template.replace(placeholder, value)
