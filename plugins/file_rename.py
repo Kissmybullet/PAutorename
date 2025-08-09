@@ -34,6 +34,8 @@ sequence_collection = db["active_sequences"]
 
 # Enhanced regex patterns for season and episode extraction
 SEASON_EPISODE_PATTERNS = [
+    # Episode in brackets at start (e.g., "[2] Re:Monster")
+    (re.compile(r'^\[(\d+)\]'), (None, 'episode')),
     # Standard patterns (S01E02, S01EP02)
     (re.compile(r'S(\d+)(?:E|EP)(\d+)'), ('season', 'episode')),
     # Patterns with spaces/dashes (S01 E02, S01-EP02)
@@ -42,6 +44,8 @@ SEASON_EPISODE_PATTERNS = [
     (re.compile(r'Season\s*(\d+)\s*Episode\s*(\d+)', re.IGNORECASE), ('season', 'episode')),
     # Patterns with brackets/parentheses ([S01][E02])
     (re.compile(r'\[S(\d+)\]\[E(\d+)\]'), ('season', 'episode')),
+    # Show name before - E## pattern (e.g., "Serial Lain - E03")
+    (re.compile(r'-\s*E(\d+)', re.IGNORECASE), (None, 'episode')),
     # Fallback patterns (S01 13, Episode 13)
     (re.compile(r'S(\d+)[^\d]*(\d+)'), ('season', 'episode')),
     (re.compile(r'(?:E|EP|Episode)\s*(\d+)', re.IGNORECASE), (None, 'episode')),
@@ -61,6 +65,8 @@ QUALITY_PATTERNS = [
 
 # ✨ NEW: Enhanced title detection patterns
 TITLE_PATTERNS = [
+    # Episode number in brackets at start, title after (e.g., "[2] Re:Monster")
+    (re.compile(r'^\[\d+\]\s*(.+?)(?=\s*\[|\s*@|$)', re.IGNORECASE), 'bracket_episode'),
     # Show name before - E## pattern (e.g., "Serial Lain - E03")
     (re.compile(r'^(.+?)\s*-\s*E\d+', re.IGNORECASE), 'episode_dash'),
     # Show name before season/episode (e.g., "The Office S01E01")
