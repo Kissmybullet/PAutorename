@@ -9,4 +9,4 @@ humanize
 pyromod
 ffmpeg-python
 flask
-TgCrypto>=1.2.5
+tgcrypto-pyrofork
