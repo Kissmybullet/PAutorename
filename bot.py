@@ -59,7 +59,7 @@ class Bot(Client):
                     chat_id=chat_id,
                     photo=Config.START_PIC,
                     caption=(
-                        "**Dᴀɴᴛᴇ ɪs ʀᴇsᴛᴀʀᴛᴇᴅ ᴀɢᴀɪɴ  !**\n\n"
+                        "**Dᴇɴᴊɪ ɪs ʀᴇsᴛᴀʀᴛᴇᴅ ᴀɢᴀɪɴ  !**\n\n"
                         f"ɪ ᴅɪᴅɴ'ᴛ sʟᴇᴘᴛ sɪɴᴄᴇ​: `{uptime_string}`"
                     ),
                     reply_markup=InlineKeyboardMarkup(
