@@ -10,7 +10,7 @@ from config import Config
 from route import web_server
 import pyrogram.utils
 
-pyrogram.utils.MIN_CHANNEL_ID = -1002826558276
+pyrogram.utils.MIN_CHANNEL_ID = -1001586987735
 
 flask_app = Flask(__name__)
 
@@ -21,7 +21,7 @@ def uptime():
 def run_flask():
     flask_app.run(host="0.0.0.0", port=int(os.environ.get("FLASK_PORT", 5000)))
 
-SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1002826558276"))
+SUPPORT_CHAT = int(os.environ.get("SUPPORT_CHAT", "-1001586987735"))
 PORT = Config.PORT
 
 class Bot(Client):
