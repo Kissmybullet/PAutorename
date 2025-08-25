@@ -7,7 +7,7 @@ class Config(object):
     # pyro client config
     API_ID    = os.environ.get("API_ID", "22451708")
     API_HASH  = os.environ.get("API_HASH", "288f749fcef814c1ec90b66936158c68")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8230101234:AAHj4sF3TSSLbU8vCBL7zPLBPeboZQL3_F0") 
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7012541014:AAFI2an6FRSqyZSYrXqyHuxYxSYeNNgNBiU") 
 
     # database config
     DB_NAME = os.environ.get("DB_NAME","rename")     
@@ -17,12 +17,12 @@ class Config(object):
     # other configs
     BOT_UPTIME = time.time()
     START_PIC = os.environ.get("START_PIC", "https://i.ibb.co/nNNssMjC/photo-2025-08-08-15-59-46-7536245360419667984.jpg")
-    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6975428639, 6180759790').split()]
-    FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', 'Mortals_Log_Channel').split(',')
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002887783820"))
-    BOT_OWNER = int(os.environ.get("BOT_OWNER", "6975428639"))
-    DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002887783820"))
-    FORCE_SUB_CHANNELS = ["Mortals_Log_Channel"]
+    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6945600663, 5817124748').split()]
+    FORCE_SUB_CHANNELS = os.environ.get('FORCE_SUB_CHANNELS', 'Movies_Prime_life').split(',')
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1001586987735"))
+    BOT_OWNER = int(os.environ.get("BOT_OWNER", "5817124748"))
+    DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1001586987735"))
+    FORCE_SUB_CHANNELS = ["Movies_Prime_life"]
     
     # wes response configuration     
     WEBHOOK = bool(os.environ.get("WEBHOOK", "True"))
